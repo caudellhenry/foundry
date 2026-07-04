@@ -4,7 +4,7 @@
 
 `/foundry:ship <idea>` drives the full delivery pipeline — Idea → [Research] → [Prototype] → PRD → Board → Execution → QA — with vertical-slice tickets, executable acceptance checks, deterministic guardrails, and non-negotiable human gates. Built directly on Anthropic's published AI engineering guidance (Claude Code best practices, Building Effective Agents, context engineering, tool design, evals) and the practitioner synthesis in the companion research guide.
 
-Full design rationale and compliance matrix: `Knowledge Base/research/research_ai-engineering-guide_2026-07-04.md`, §9. User guide: [docs/user-guide.html](docs/user-guide.html).
+Full design rationale and compliance matrix: `Knowledge Base/research/research_ai-engineering-guide_2026-07-04.md`, §9. User guide: [docs/user-guide.html](docs/user-guide.html) ([live mirror](https://plush-laurel-nh4p.here.now/) · markdown source: [USER_GUIDE.md](USER_GUIDE.md)).
 
 ## What's portable and what isn't
 
