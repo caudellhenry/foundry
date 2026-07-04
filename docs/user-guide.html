@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>foundry — User Guide</title>
+<style>
+:root{
+  --bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --border:#2d3646;
+  --text:#dbe4f0; --muted:#8b98ab; --accent:#5cc8ff; --accent2:#ffb454;
+  --good:#6ee7a0; --warn:#ff7b72; --chip:#233046;
+  --serif:Georgia,'Times New Roman',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --mono:'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;
+}
+[data-theme="light"]{
+  --bg:#f7f8fa; --panel:#ffffff; --panel2:#f0f3f7; --border:#d7dee8;
+  --text:#1c2430; --muted:#5a6a80; --accent:#0969da; --accent2:#b35900;
+  --good:#1a7f4b; --warn:#c62828; --chip:#e8eef6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.65;font-size:16px}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+code{font-family:var(--mono);font-size:.86em;background:var(--chip);padding:.12em .38em;border-radius:4px}
+pre{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:14px;overflow-x:auto;font-family:var(--mono);font-size:.82em;line-height:1.55;margin:12px 0}
+pre code{background:none;padding:0}
+.layout{display:flex;max-width:1240px;margin:0 auto}
+nav#sidebar{width:240px;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto;padding:26px 14px 40px 20px;border-right:1px solid var(--border)}
+nav#sidebar .brand{font-weight:700;font-size:1.05em;font-family:var(--mono)}
+nav#sidebar .brand::before{content:'⚒ ';color:var(--accent2)}
+nav#sidebar .sub{font-size:.72em;color:var(--muted);margin:2px 0 18px}
+nav#sidebar a{display:block;padding:5px 10px;border-radius:6px;color:var(--muted);font-size:.83em;margin-bottom:1px}
+nav#sidebar a.active,nav#sidebar a:hover{background:var(--chip);color:var(--text);text-decoration:none}
+main{flex:1;padding:34px 46px 120px;min-width:0}
+header.hero h1{font-family:var(--mono);font-size:2em;margin-bottom:8px}
+header.hero h1 span{color:var(--accent2)}
+header.hero .tagline{color:var(--muted);max-width:720px}
+.meta-chips{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 30px}
+.chip{background:var(--chip);border:1px solid var(--border);border-radius:999px;padding:3px 12px;font-size:.74em;color:var(--muted)}
+.chip b{color:var(--accent)}
+section{margin-bottom:50px}
+h2{font-family:var(--serif);font-size:1.5em;margin-bottom:8px;padding-top:14px;border-top:1px solid var(--border)}
+h3{font-size:1.02em;margin:20px 0 8px;color:var(--accent)}
+p{margin-bottom:12px;max-width:820px}
+.kicker{font-size:.72em;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2);font-weight:700}
+table{border-collapse:collapse;width:100%;font-size:.86em;margin:14px 0}
+.tablewrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px}
+th{background:var(--panel2);text-align:left;padding:9px 12px;white-space:nowrap}
+td{padding:9px 12px;border-top:1px solid var(--border);vertical-align:top}
+tr:hover td{background:var(--panel)}
+.pipe{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0}
+.pipe .step{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 12px;flex:1;min-width:120px;text-align:center}
+.pipe .step .ph{font-family:var(--mono);font-size:.68em;color:var(--muted)}
+.pipe .step .cmd{font-family:var(--mono);font-size:.8em;color:var(--accent);display:block;margin-top:2px}
+.pipe .step .gate{font-size:.64em;color:var(--accent2);display:block;margin-top:4px}
+.pipe .step.cond{border-style:dashed}
+details{background:var(--panel);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
+details summary{padding:12px 18px;cursor:pointer;font-weight:600;font-size:.93em;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details summary::after{content:'+';color:var(--accent);font-size:1.2em}
+details[open] summary::after{content:'–'}
+details .body{padding:0 18px 16px}
+details .body p{font-size:.9em}
+ul.clean{list-style:none;max-width:820px;margin-bottom:12px}
+ul.clean li{padding:4px 0 4px 22px;position:relative;font-size:.92em}
+ul.clean li::before{content:'→';position:absolute;left:0;color:var(--accent)}
+.callout{border-left:3px solid var(--accent2);background:var(--panel);padding:12px 18px;border-radius:0 8px 8px 0;margin:14px 0;max-width:820px;font-size:.92em}
+.callout.danger{border-left-color:var(--warn)}
+.badge{display:inline-block;font-size:.66em;font-family:var(--mono);padding:1px 8px;border-radius:999px;background:var(--chip);color:var(--accent);margin-left:6px;vertical-align:middle}
+.badge.user{color:var(--accent2)} .badge.model{color:var(--good)}
+.toolbar{position:fixed;top:14px;right:16px;z-index:50;display:flex;gap:8px}
+.toolbar button{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:.8em}
+kbd{font-family:var(--mono);font-size:.8em;background:var(--panel2);border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;padding:1px 6px}
+footer{color:var(--muted);font-size:.78em;border-top:1px solid var(--border);padding-top:18px;max-width:820px}
+@media(max-width:900px){nav#sidebar{display:none}main{padding:24px 18px 80px}}
+@media print{nav#sidebar,.toolbar{display:none}body{background:#fff;color:#000}}
+</style>
+</head>
+<body data-theme="dark">
+<div class="toolbar">
+  <button id="themeBtn">◐ Theme</button>
+  <button onclick="window.print()">⎙ Print</button>
+</div>
+<div class="layout">
+<nav id="sidebar">
+  <div class="brand">foundry</div>
+  <div class="sub">User Guide · v0.1.0</div>
+  <a href="#what">What It Is</a>
+  <a href="#install">Install</a>
+  <a href="#quickstart">Quickstart</a>
+  <a href="#pipeline">The Pipeline</a>
+  <a href="#commands">Command Reference</a>
+  <a href="#walkthrough">Worked Example</a>
+  <a href="#state">State &amp; Artefacts</a>
+  <a href="#guardrails">Guardrails</a>
+  <a href="#modes">Parallel &amp; AFK</a>
+  <a href="#faq">Troubleshooting</a>
+</nav>
+<main>
+
+<header class="hero">
+  <div class="kicker">Claude Code Plugin</div>
+  <h1>foundry <span>user guide</span></h1>
+  <p class="tagline">Idea → production through one command. foundry drives grilling, research, prototyping, PRD, a vertical-slice board, TDD execution, and human-gated QA — with deterministic hooks stopping the things that must never happen.</p>
+  <div class="meta-chips">
+    <span class="chip"><b>14</b> skills</span>
+    <span class="chip"><b>5</b> subagents</span>
+    <span class="chip"><b>6</b> guardrail hooks</span>
+    <span class="chip">GitHub + Linear MCP</span>
+    <span class="chip">v0.1.0</span>
+  </div>
+</header>
+
+<section id="what">
+  <h2>What It Is (and Is Not)</h2>
+  <p>foundry packages the master workflow from the companion research guide (<code>Knowledge Base/research/research_ai-engineering-guide_2026-07-04.md</code>) as a working plugin. Its bet: <b>front-load the thinking — grilling, research, prototype, PRD, board — and autonomous execution becomes safe and good.</b> 'AFK execution is a consequence of setup, not a goal.'</p>
+  <ul class="clean">
+    <li><b>It is</b> a process harness: skills that orchestrate each phase, subagents that keep contexts clean, hooks that make the guardrails deterministic.</li>
+    <li><b>It is not</b> a replacement for judgement: the PRD approval, the QA walkthrough, and the comprehension quiz are human gates by design — the plugin schedules them, it never performs them.</li>
+    <li><b>Every skill works standalone.</b> You can adopt <code>/foundry:grill</code> or the <code>tdd</code> discipline without ever running <code>/foundry:ship</code>. Nothing owns your process.</li>
+  </ul>
+</section>
+
+<section id="install">
+  <h2>Install</h2>
+  <div class="callout">foundry is two layers, split cleanly by directory: <code>skills/</code> is the portable pipeline logic (open Agent Skills standard — works on any compatible harness); <code>hooks/</code>, <code>agents/</code>, and <code>.claude-plugin/</code> are Claude Code-only guardrails and won't run elsewhere. Everywhere else, the pipeline still works — the skill text itself instructs the agent on the rules; you just lose deterministic enforcement.</div>
+  <h3>Claude Code — full guardrails (recommended surface)</h3>
+  <pre><code>claude
+/plugin marketplace add caudellhenry/foundry
+/plugin install foundry@foundry-marketplace
+
+# local dev install instead:
+/plugin marketplace add /path/to/foundry   # no spaces in the path
+/plugin install foundry@foundry-marketplace
+
+# verify:
+/help</code></pre>
+  <h3>Any Agent Skills harness — Cursor, Codex, Windsurf, Gemini CLI</h3>
+  <pre><code>npx skills add caudellhenry/foundry</code></pre>
+  <p style="font-size:.9em">Same distribution mechanism as <a href="https://github.com/mattpocock/skills" target="_blank" rel="noopener">mattpocock/skills</a>: pick which of the 14 skills to install and which agent to target. No hooks, no worktree-isolated subagents.</p>
+  <h3>Hermes / OpenCode — shared <code>.agents/skills/</code> pool</h3>
+  <pre><code>git clone https://github.com/caudellhenry/foundry.git
+cd foundry &amp;&amp; bash scripts/export-to-agents-pool.sh</code></pre>
+  <p style="font-size:.9em">Copies each skill into <code>~/.agents/skills/foundry-&lt;name&gt;/</code> (prefixed to avoid colliding with Pocock originals already in that pool — <code>research</code>, <code>prototype</code>, <code>implement</code>, <code>tdd</code>, <code>qa</code>, and <code>handoff</code> all exist there already) and symlinks into <code>~/.hermes/skills/</code> and <code>~/.opencode/skills/</code> if present, matching the pattern those tools already use for every other skill. Re-run after pulling updates.</p>
+  <h3>MimoCode, MiniMax, others</h3>
+  <p style="font-size:.9em">Not verified against a real install — neither runtime was present on the machine this plugin was built on. If the harness reads <code>SKILL.md</code> + YAML frontmatter from a scanned directory, copying <code>skills/&lt;name&gt;/</code> in directly should work; unrecognised Claude-Code-only frontmatter keys (<code>disable-model-invocation</code>, <code>context: fork</code>, <code>agent:</code>) should be safely ignored. Treat this as a starting point, not a confirmed recipe.</p>
+  <h3>MCP servers</h3>
+  <p>The bundled <code>.mcp.json</code> registers the hosted <b>GitHub</b> and <b>Linear</b> servers. Authenticate on first use via <code>/mcp</code>. Using only one tracker? Delete the other entry. Every new server you add later should pass <code>/foundry:security-review</code> first.</p>
+  <div class="callout">Hooks activate when the plugin is enabled and apply to the session. Read <code>hooks/scripts/*.sh</code> before installing — they are short, plain bash, and they run with your permissions. That review habit applies to any plugin, including this one.</div>
+</section>
+
+<section id="quickstart">
+  <h2>Quickstart (Five Minutes)</h2>
+  <pre><code>cd your-repo
+claude
+
+&gt; /foundry:ship add CSV export to the reports page</code></pre>
+  <ul class="clean">
+    <li>foundry creates <code>.foundry/state.json</code>, records your idea in <code>intent.md</code>, and starts grilling you — one question at a time. Answer concretely; say 'parked' to defer a question.</li>
+    <li>It then offers Research/Prototype <i>only if warranted</i>, drafts the PRD, and waits for your approval.</li>
+    <li>On approval it creates vertical-slice tickets with blocking links, then implements them one at a time under TDD, opening a PR per ticket.</li>
+    <li>Finally it hands you a QA plan, a literate diff, and a five-question quiz. Findings become new tickets; the loop repeats until the board is empty.</li>
+  </ul>
+  <p>At any point, plain <code>/foundry:ship</code> reports where you are and the single next command.</p>
+</section>
+
+<section id="pipeline">
+  <h2>The Pipeline</h2>
+  <div class="pipe">
+    <div class="step"><span class="ph">PHASE 1</span><b>Idea</b><span class="cmd">/foundry:grill</span><span class="gate">gate: decisions resolved</span></div>
+    <div class="step cond"><span class="ph">PHASE 2 · conditional</span><b>Research</b><span class="cmd">research</span><span class="gate">research.md + expiry</span></div>
+    <div class="step cond"><span class="ph">PHASE 3 · conditional</span><b>Prototype</b><span class="cmd">prototype</span><span class="gate">human picks winner</span></div>
+    <div class="step"><span class="ph">PHASE 4</span><b>PRD</b><span class="cmd">/foundry:prd</span><span class="gate">HUMAN APPROVES</span></div>
+    <div class="step"><span class="ph">PHASE 5</span><b>Board</b><span class="cmd">/foundry:board</span><span class="gate">vertical slices</span></div>
+    <div class="step"><span class="ph">PHASE 6</span><b>Execute</b><span class="cmd">/foundry:implement</span><span class="gate">check passes</span></div>
+    <div class="step"><span class="ph">PHASE 7</span><b>QA</b><span class="cmd">/foundry:review · /foundry:qa</span><span class="gate">HUMAN + QUIZ</span></div>
+  </div>
+  <p>Phases 5–7 loop until the board is empty and all gates pass. Dashed phases are skipped when they add no value — foundry must justify offering them in one line. The one-sentence rule: a change you could describe as a single-sentence diff skips straight to implementation.</p>
+</section>
+
+<section id="commands">
+  <h2>Command Reference</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Command</th><th>Type</th><th>What it does</th></tr>
+    <tr><td><code>/foundry:ship [idea]</code></td><td><span class="badge user">user</span></td><td>Orchestrator. Starts or resumes the pipeline; reports state and the next step. Owns <code>.foundry/state.json</code>.</td></tr>
+    <tr><td><code>/foundry:grill</code></td><td><span class="badge user">user</span></td><td>One-question-at-a-time interview → <code>intent.md</code> decision log; grows the <code>CONTEXT.md</code> domain language.</td></tr>
+    <tr><td><code>research</code></td><td><span class="badge model">model · fork</span></td><td>Primary-source investigation of a named external → per-sprint <code>research.md</code> with an <code>expires:</code> date. Runs in an isolated context; returns ≤1,500 tokens.</td></tr>
+    <tr><td><code>prototype</code></td><td><span class="badge model">model</span></td><td>2–3 radically different throwaway variants for a named design question; you pick; winner committed, losers deleted.</td></tr>
+    <tr><td><code>/foundry:prd</code></td><td><span class="badge user">user</span></td><td>Plan-mode synthesis of intent + research + prototype → <code>PRD.md</code> (behaviour only, pass/fail ACs); publishes to the tracker after your approval.</td></tr>
+    <tr><td><code>/foundry:board</code></td><td><span class="badge user">user</span></td><td>PRD → vertical-slice tickets with blocking links via GitHub/Linear MCP; every AC maps to a ticket.</td></tr>
+    <tr><td><code>/foundry:implement [ticket]</code></td><td><span class="badge user">user</span></td><td>Explore → Plan → Implement (TDD) → Commit for one ticket, on a branch, ending in a PR. Wires the ticket's check into the Stop-hook test gate. 3-iteration cap.</td></tr>
+    <tr><td><code>tdd</code> · <code>diagnose</code></td><td><span class="badge model">model</span></td><td>Red–green–refactor; and the bug loop (reproduce → minimise → hypothesise → instrument → fix → regress).</td></tr>
+    <tr><td><code>/foundry:review</code></td><td><span class="badge user">user · fork</span></td><td>Fresh-context two-axis review (standards + spec) of the PR diff; findings ranked, never auto-fixed.</td></tr>
+    <tr><td><code>/foundry:qa</code></td><td><span class="badge user">user</span></td><td>QA walkthrough plan + literate diff + 5-question comprehension quiz; findings → new tickets.</td></tr>
+    <tr><td><code>/foundry:security-review</code></td><td><span class="badge user">user</span></td><td>Static analysis + hand-checks on the diff; lethal-trifecta audit for new tools/MCP servers; iteration and complexity audits.</td></tr>
+    <tr><td><code>/foundry:evals</code></td><td><span class="badge user">user</span></td><td>Scaffolds <code>evals/</code> from real failures (20–50 tasks); pass@k / pass^k runner; CI gate on pass^3.</td></tr>
+    <tr><td><code>/foundry:handoff</code></td><td><span class="badge user">user</span></td><td>Compacts the session into <code>handoff.md</code> so a fresh session resumes losslessly.</td></tr>
+  </table></div>
+  <p style="font-size:.85em;color:var(--muted)"><span class="badge user">user</span> = only you can invoke it (orchestration, side effects) · <span class="badge model">model</span> = the agent may reach for it when the task fits (reusable discipline) · <i>fork</i> = runs in an isolated context.</p>
+  <h3>Subagents</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Agent</th><th>Isolation</th><th>Contract</th></tr>
+    <tr><td><code>foundry-explorer</code></td><td>read-only</td><td>maps relevant code; ≤1,500-token brief; never writes</td></tr>
+    <tr><td><code>foundry-planner</code></td><td>read-only</td><td>step plan + risks for one ticket; flags one-sentence diffs</td></tr>
+    <tr><td><code>foundry-implementer</code></td><td><code>isolation: worktree</code></td><td>one ticket under TDD on its own branch; diffstat + real test output back</td></tr>
+    <tr><td><code>foundry-verifier</code></td><td>—</td><td>adversarial: tries to make acceptance criteria fail; PASS/FAIL/UNVERIFIABLE with evidence</td></tr>
+    <tr><td><code>foundry-reviewer</code></td><td>fork (no history)</td><td>two-axis findings, severity-ranked; fixes nothing</td></tr>
+  </table></div>
+</section>
+
+<section id="walkthrough">
+  <h2>Worked Example</h2>
+  <details open><summary>Shipping 'CSV export on the reports page' end to end</summary><div class="body">
+  <p><b>1 · Idea.</b> <code>/foundry:ship add CSV export to the reports page</code>. Grilling asks: which report views? all rows or the filtered set? who may export? filename convention? what happens over 100k rows? Answers land in <code>intent.md</code>; 'column localisation' gets parked.</p>
+  <p><b>2 · Research — skipped.</b> No unfamiliar external (CSV is stdlib territory). foundry says so in one line and moves on.</p>
+  <p><b>3 · Prototype — offered.</b> Streaming download v background-job-with-email is a real architecture question. Two spikes in a worktree; you pick streaming; the winner is committed as <code>prototype: streaming csv spike</code>.</p>
+  <p><b>4 · PRD.</b> Draft describes the button, the filtered-set semantics, the failure banner over 100k rows, and five pass/fail ACs (e.g. 'exported file opens in Excel with correct headers — check: <code>npm run test:e2e -- csv-export</code>'). You approve; it lands as the parent issue.</p>
+  <p><b>5 · Board.</b> Three vertical slices: export endpoint with streaming + tests → button + download flow + e2e (blocked by #1) → permissions + audit log (unblocked). You sanity-check the table.</p>
+  <p><b>6 · Execute.</b> Ticket 1: explorer maps the report API; planner emits four TDD steps; implementation runs red–green–refactor; the Stop hook blocks an early 'done' because the e2e check still fails; iteration 2 fixes it; PR opens. Tickets 2–3 run in parallel worktrees.</p>
+  <p><b>7 · QA.</b> Review (fresh context) flags a should-fix: the endpoint duplicates an existing serialiser — ticketed. The QA plan walks you through export-with-filters and the >100k failure banner; the quiz asks why streaming beat the job queue and where the row cap lives. You pass; the duplicate-serialiser ticket loops through 5→6→7; board empties; the parent issue closes.</p>
+  </div></details>
+</section>
+
+<section id="state">
+  <h2>State and Artefacts</h2>
+  <p>Nothing load-bearing lives in a conversation. Everything foundry knows is on disk or on the board:</p>
+  <div class="tablewrap"><table>
+    <tr><th>Artefact</th><th>Written by</th><th>Purpose</th></tr>
+    <tr><td><code>.foundry/state.json</code></td><td>ship / implement / qa</td><td>phase, ticket, check command, gate flags, iteration chain — injected into every session by the SessionStart hook</td></tr>
+    <tr><td><code>intent.md</code></td><td>grill</td><td>decision log, out-of-scope, parked questions, candidate checks</td></tr>
+    <tr><td><code>CONTEXT.md</code></td><td>grill</td><td>the project's shared domain language (ubiquitous language)</td></tr>
+    <tr><td><code>research.md</code></td><td>research</td><td>per-sprint external knowledge with <code>expires:</code> — the hook nags when stale</td></tr>
+    <tr><td><code>PRD.md</code> + tracker issue</td><td>prd</td><td>the destination document; ACs feed tickets and checks</td></tr>
+    <tr><td>the board (GitHub/Linear)</td><td>board / qa</td><td>source of truth for what an agent may pick up next</td></tr>
+    <tr><td><code>handoff.md</code></td><td>handoff</td><td>lossless resumption for the next session or person</td></tr>
+    <tr><td><code>evals/</code></td><td>evals</td><td>real-failure task suite; pass^3 release gate</td></tr>
+  </table></div>
+</section>
+
+<section id="guardrails">
+  <h2>Guardrails (What the Hooks Enforce)</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Hook</th><th>Fires on</th><th>Enforces</th></tr>
+    <tr><td><code>protect-branches</code></td><td>every Bash call</td><td>blocks pushes to main/master, force-pushes, and direct commits/merges on main</td></tr>
+    <tr><td><code>deny-destructive</code></td><td>every Bash call</td><td>blocks <code>rm -rf</code> on root/home, curl-pipe-to-shell, hard resets to remote main</td></tr>
+    <tr><td><code>format</code></td><td>every Edit/Write</td><td>best-effort prettier/ruff/gofmt/rustfmt on the touched file; never blocks</td></tr>
+    <tr><td><code>test-gate</code></td><td>turn end (Stop)</td><td>while a ticket is active, the turn cannot end until its acceptance check passes (harness overrides after 8 consecutive blocks)</td></tr>
+    <tr><td><code>board-state</code></td><td>session start</td><td>injects phase/ticket/gates; warns at iteration count 2 of 3</td></tr>
+    <tr><td><code>research-expiry</code></td><td>session start</td><td>warns when research.md is past its expiry (research rots)</td></tr>
+  </table></div>
+  <div class="callout danger"><b>The 3-iteration rule.</b> After three consecutive agent-only attempts at the same failing check, foundry stops and demands human review — unreviewed iterative 'improvement' measurably increases vulnerabilities (+37.6% criticals over five iterations in controlled testing). Do not raise this cap.</div>
+  <p>Hooks are deterministic where CLAUDE.md-style instructions are advisory — that is why the guarantees live here. To bypass a gate deliberately (rare), set <code>gate_active: false</code> in <code>.foundry/state.json</code> and say why in the session.</p>
+</section>
+
+<section id="modes">
+  <h2>Parallel and AFK Operation</h2>
+  <h3>Parallel tickets</h3>
+  <p>Ask <code>/foundry:implement</code> to parallelise: it fans <code>foundry-implementer</code> subagents across genuinely unblocked tickets, each in its own git worktree, so edits never collide. Add a <code>.worktreeinclude</code> file (gitignore syntax) listing untracked essentials such as <code>.env</code> so new worktrees get them automatically.</p>
+  <h3>AFK (the Ralph loop)</h3>
+  <pre><code># emitted by /foundry:implement on request — review before running
+while next=$(gh issue list --label ready --limit 1 -q '.[0].number' --json number); do
+  [ -z "$next" ] && break
+  claude -p "/foundry:implement #$next" \
+    --allowedTools "Read,Edit,Write,Bash(npm test:*),Bash(git commit:*),Bash(gh pr create:*)"
+done</code></pre>
+  <ul class="clean">
+    <li>Fresh context per ticket; the board is the memory — that is what makes walking away safe.</li>
+    <li>Only after phases 1–5 are done well: AFK quality is a consequence of setup.</li>
+    <li>Set a budget first. Heavy 2026 agent use runs to hundreds of dollars a day; foundry asks for a per-sprint cap before starting.</li>
+    <li>QA and the quiz still happen when you return. AFK moves the execution, never the gates.</li>
+  </ul>
+</section>
+
+<section id="faq">
+  <h2>Troubleshooting and FAQ</h2>
+  <details><summary>The skills don't appear after install</summary><div class="body"><p>Run <code>/plugin</code> → check foundry is installed and enabled, then restart the session. For standalone copies, confirm the folder is <code>.claude/skills/&lt;name&gt;/SKILL.md</code> (the folder name matters) and keep the <code>*-FORMAT.md</code> companions next to their SKILL.md — they are referenced by relative path.</p></div></details>
+  <details><summary>The turn keeps getting blocked at the end</summary><div class="body"><p>That is the test-gate doing its job: <code>.foundry/state.json</code> has <code>gate_active: true</code> and the ticket's <code>check_command</code> is failing — the last 20 lines of its output are shown. Fix the failure, or if the check itself is wrong, correct it on the ticket and in state.json. Genuinely blocked? Set <code>gate_active: false</code> and say why; the harness also overrides after 8 consecutive blocks.</p></div></details>
+  <details><summary>foundry keeps offering phases I don't want</summary><div class="body"><p>Say 'skip research' / 'skip prototype' — they are conditional by design and your call is final. If it happens repeatedly, the intent is probably under-specified: run <code>/foundry:grill</code> once more and record the decision, and it will stop asking.</p></div></details>
+  <details><summary>Can I use it without GitHub or Linear?</summary><div class="body"><p>Yes — tell <code>/foundry:board</code> to use local files; it will keep the board as <code>board/</code> markdown tickets with <code>Blocked by:</code> lines. You lose true blocking semantics and PR integration, but the pipeline works. Remove the unused servers from <code>.mcp.json</code>.</p></div></details>
+  <details><summary>How do I hand work to a colleague (or to tomorrow's session)?</summary><div class="body"><p><code>/foundry:handoff</code>. It writes <code>handoff.md</code> — decisions with their why, unresolved items, gotchas, next actions — and syncs state.json. A fresh session picks up with <code>/foundry:ship</code> and needs nothing from the old conversation.</p></div></details>
+  <details><summary>The agent claims something works but it doesn't</summary><div class="body"><p>Three levers, in order: (1) make the ticket's acceptance check executable — an agent cannot argue with an exit code; (2) run <code>foundry-verifier</code>, which is adversarial by contract and reports UNVERIFIABLE rather than PASS when it could not exercise a criterion; (3) file the case with <code>/foundry:evals</code> so the regression is caught automatically next time. And the permanent rule: verification is ultimately yours — the QA walkthrough is not optional.</p></div></details>
+  <details><summary>Where do I change what the hooks block?</summary><div class="body"><p><code>hooks/scripts/*.sh</code> — short, commented bash. Edit the patterns, then restart the session. Keep protect-branches and the 3-iteration rule unless you have a very good reason; they exist because the failure modes they stop are silent.</p></div></details>
+  <footer style="margin-top:26px">foundry v0.1.0 · 4 July 2026 · design rationale and compliance matrix: <code>Knowledge Base/research/research_ai-engineering-guide_2026-07-04.md</code> §9 · every skill is plain text — read before you run.</footer>
+</section>
+
+</main>
+</div>
+<script>
+const tb=document.getElementById('themeBtn');
+tb.onclick=()=>{const b=document.body;b.dataset.theme=b.dataset.theme==='dark'?'light':'dark';localStorage.setItem('foundry-theme',b.dataset.theme)};
+if(localStorage.getItem('foundry-theme'))document.body.dataset.theme=localStorage.getItem('foundry-theme');
+const links=[...document.querySelectorAll('#sidebar a')];
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+e.target.id))}})},{rootMargin:'-20% 0px -70% 0px'});
+document.querySelectorAll('main section').forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>

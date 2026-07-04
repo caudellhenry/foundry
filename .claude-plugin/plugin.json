@@ -1,0 +1,10 @@
+{
+  "name": "foundry",
+  "version": "0.1.0",
+  "description": "Idea-to-production delivery pipeline: /ship drives Idea → Research → Prototype → PRD → Board → Execution → QA with vertical slices, executable checks, human gates, and deterministic guardrails. Built on Anthropic's published AI engineering guidance.",
+  "author": { "name": "Henry Caudell" },
+  "homepage": "https://github.com/caudellhenry/foundry",
+  "repository": "https://github.com/caudellhenry/foundry",
+  "license": "MIT",
+  "keywords": ["workflow", "shipping", "prd", "kanban", "tdd", "qa", "agentic-coding"]
+}

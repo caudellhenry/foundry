@@ -1,0 +1,8 @@
+.foundry/
+research.md
+intent.md
+PRD.md
+handoff.md
+*.log
+.DS_Store
+node_modules/

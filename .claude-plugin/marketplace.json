@@ -1,0 +1,11 @@
+{
+  "name": "foundry-marketplace",
+  "owner": { "name": "Henry Caudell" },
+  "plugins": [
+    {
+      "name": "foundry",
+      "source": "./",
+      "description": "Idea-to-production delivery pipeline: /ship drives grill → research → prototype → PRD → board → execution → QA with executable checks, guardrail hooks, and human gates."
+    }
+  ]
+}
